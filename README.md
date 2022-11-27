@@ -1,5 +1,7 @@
-# jekyll-action
+# jekyll-build-action
 A GitHub Action to build and publish Jekyll sites to GitHub Pages
+
+A fork of `Cutwell/jekyll-build-action`, updated to support Ruby 3.0.0
 
 Out-of-the-box Jekyll with GitHub Pages allows you to leverage a limited, white-listed, set of gems. Complex sites requiring custom ones or non white-listed ones (AsciiDoc for instance) used to require a continuous integration build in order to pre-process the site.
 
@@ -54,7 +56,7 @@ git push -u origin gh-pages
 ```
 
 ### Use the action
-Use the `helaili/jekyll-action@master` action in your workflow file. It needs access to the out-of-the-box `GITHUB_TOKEN` secret. The directory where the Jekyll site lives will be detected (based on the location of `_config.yml`) but you can also explicitly set this directory by setting the `jekyll_src` parameter (`sample_site` for us). The `SRC` environment variable is also supported for backward compatibilty but it is deprecated.
+Use the `Cutwell/jekyll-build-action@master` action in your workflow file. It needs access to the out-of-the-box `GITHUB_TOKEN` secret. The directory where the Jekyll site lives will be detected (based on the location of `_config.yml`) but you can also explicitly set this directory by setting the `jekyll_src` parameter (`sample_site` for us). The `SRC` environment variable is also supported for backward compatibilty but it is deprecated.
 The action will search for Gemfile location. If your want to specify it explicitly (e.g. if you have multiple Gemfiles per project), you should update `gem_src` input parameter accordingly.
 
 Use the `actions/cache` action in the workflow as well, to shorten build times and decrease load on GitHub's servers
@@ -80,18 +82,18 @@ jobs:
           ${{ runner.os }}-gems-
 
     # Standard usage
-    - uses:  helaili/jekyll-action@v2
+    - uses:  Cutwell/jekyll-build-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     # Specify the Jekyll source location as a parameter
-    - uses: helaili/jekyll-action@v2
+    - uses: Cutwell/jekyll-build-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         jekyll_src: 'sample_site'
 
     # Specify the target branch (optional)
-    - uses: helaili/jekyll-action@v2
+    - uses: Cutwell/jekyll-build-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         target_branch: 'gh-pages'
@@ -149,46 +151,46 @@ When set override the default bundler version provided. If not given will attemp
 
 ## Use case: multi version publishing 
 
-Say you want to create a documentation website where you both have the current version (`v3.0`), but also `v1.0` and `v2.0`. You can then use a combination of `keep_history` and `target_path` along with the `actions/checkout@v2`action so that each version gets pushed in a separate folder without overwritting the previous one. 
+Say you want to create a documentation website where you both have the current version (`v3.0`), but also `v1.0` and `v1.0`. You can then use a combination of `keep_history` and `target_path` along with the `actions/checkout@v2`action so that each version gets pushed in a separate folder without overwritting the previous one. 
 
 ```yaml 
 ... 
   publish-current-version: 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
       with:
         ref: main
     - name: Run with dest path
-      uses: helaili/jekyll-build@v2
+      uses: Cutwell/jekyll-build-action@v1
       with:
         target_branch: gh-pages
         target_path: /
         keep_history: true
         token: ${{ secrets.GITHUB_TOKEN }}
 
-  publish-v2-version: 
+  publish-v1-version: 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
       with:
-        ref: v2.0
+        ref: v1.0
     - name: Run with dest path
-      uses: helaili/jekyll-build@v2
+      uses: Cutwell/jekyll-build-action@v1
       with:
         target_branch: gh-pages
-        target_path: v2.0
+        target_path: v1.0
         keep_history: true
         token: ${{ secrets.GITHUB_TOKEN }}
   
   publish-v1-version: 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
       with:
         ref: v1.0
     - name: Run with dest path
-      uses: helaili/jekyll-build@v2
+      uses: Cutwell/jekyll-build-action@v1
       with:
         target_branch: gh-pages
         target_path: v1.0        
