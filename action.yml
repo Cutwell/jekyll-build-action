@@ -1,5 +1,5 @@
-name: 'Jekyll Actions'
-description: 'A GitHub Action to build and publish Jekyll sites to GitHub Pages'
+name: 'Jekyll Build Action'
+description: 'A GitHub Action to build and publish Jekyll sites to GitHub Pages, Ruby 3.0.0'
 inputs:
   token:
     description: 'The GITHUB_TOKEN secret'
